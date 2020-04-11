@@ -23,6 +23,6 @@
         });
     }
     return {
-
+        bindActions: bindActions
     }
  })();
