@@ -27,7 +27,9 @@ var Binder = function () {
     });
   };
 
-  return {};
+  return {
+    bindActions: bindActions
+  };
 }();
 "use strict";
 
