@@ -5,7 +5,7 @@
    THESE METHODS ASSUME THE USE OF ELEMENT DATASETS IN ORDER TO IDENTIFY URLS TO MAKE REQUESTS AND THE ELEMENTS INTO WHICH HTML RETURNED IS TO BE RENDERED.
 */
 
- const AJAX = (() => {
+ var AJAX = function() {
      // DEFINE UNTILITY FUNCTIONS - NOT FOR EXPORTING AS PART OF AJAX OBJECT
 
      /**
@@ -13,7 +13,7 @@
       * @param {Element|string} selector Either the element we wish to interact with, or a CSS selector string
       */
      const getElem = (selector) => {
-        let el = False;
+        let el = false;
         if (typeof selector == 'string') {
             el = document.querySelector(selector);
         } else {
@@ -94,6 +94,7 @@
       * @param {Object} json_obj The JSON object parsed from a Response
       */
      const returnHTML = (json_obj) => {
+         let html = '';
          if (json_obj.is_valid && json_obj.hasOwnProperty('html')) {
              html = json_obj.html;
          } else if (!json_obj.is_valid && json_obj.hasOwnProperty('error')) {
@@ -125,11 +126,12 @@
      * @param {Boolean} check_target Whether or not we assign the calling element as the target, if none is defined
      */
     const checkDataset = (elem, check_target=true) => {
+        elem = getElem(elem);
         const dataset = elem.dataset;
         if (!dataset.url && !dataset.target) {
             console.error(`This dataset is missing necessary parameters: ${dataset}`);
         } else if (check_target && !dataset.target) {
-            dataset.target = `.${el.className.replace(' ', '.')}`
+            dataset.target = `.${elem.className.split(' ').join('.')}`
         }
         return dataset
     }
@@ -156,7 +158,7 @@
     const getLoad = (url, selector, dataType='json') => {
         return checkAndParse(url, dataType, selector)
         .then((json) => {
-            html = returnHTML(json);
+            const html = returnHTML(json);
             loadSingleElement(html, selector);
         })
     }
@@ -190,6 +192,4 @@
         getLoadElement: getLoadElement,
         getLoadElements: getLoadElements,
     }
- })();
-
- module.exports = [AJAX]; // YOU KNOW, IN CASE YOU WANT TO IMPORT THIS SOMEWHERE
+ }();

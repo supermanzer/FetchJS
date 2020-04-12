@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Index of FetchJS</title>
+
+    <!-- Compiled and minified CSS - Added for quick styling -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- http://127.0.0.1:5000 is the URL provided by the Flask API.  Substitue whatever URL best fits your use case  -->
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col s6 welcome" data-url="http://127.0.0.1:5000/">
+
+            </div>
+            <div class="question col s6" style="text-align: center;">
+                <h3>Wanna see some cool stuff I like?</h3>
+                <a data-url="http://127.0.0.1:5000/cool-things-i-like" data-target="#result" class="btn js-load-page">Yes</a>
+            </div>
+        </div>
+        <div class="row">
+            <div id="result" class="col s6 offset-s3">
+        
+            </div>
+        </div>
+    </div>
+    
+   
+    <script src="dist/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Binder.bindActions();
+            AJAX.getLoadElement(".welcome");
+        })
+    </script>
+</body>
+</html>

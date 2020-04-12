@@ -1,34 +1,45 @@
 "use strict";
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 /*
-   src/bind.js
-  
-  This defines global event listeners that serve to bind custom AJAX actions to document events.
-  ASSUMPTIONS - Anchor elements are the only general purpose triggers for these actions 
-  If the above is not true, modify code accordingly
+A poorly named but common place to stick general purpose utility functions.
+*/
+var Utils = function () {
+  /**
+   * Return HTML element that triggered event
+   * @param ev - Click event
+   * @param tagName - TagName we should search for (string or array)
+   * @returns {*|HTMLElement}
+   */
+  function getEventElement(ev, tagName) {
+    var el = ev.target;
 
-  CURRENTLY ONLY DEFINE ONE CSS CLASS BINDING BUT THIS CAN BE DRAMATICALLY EXPANDED 
- */
-var Binder = function () {
-  var selectors = {
-    '.js-load-page': AJAX.getLoadElement
-  };
+    if (typeof tagName == 'string') {
+      while (el.tagName !== tagName) {
+        el = el.parentElement;
 
-  var bindActions = function bindActions() {
-    document.addEventListener('click', function (event) {
-      var elem = Utils.getEventElement(event, 'A'); // <- this is to deal with things like icons or p tags on top of Anchor elements
-
-      if (elem) {
-        var elClass = Object.keys(selectors).find(function (k) {
-          return elem.matches(k);
-        });
-        selectors[elClass](elem);
+        if (el === null) {
+          el = false;
+          break;
+        }
       }
-    });
-  };
+    } else if (_typeof(tagName) == 'object') {
+      while (!el.tagName.includes(tagName)) {
+        el = el.parentElement;
+
+        if (el === null) {
+          el = false;
+          break;
+        }
+      }
+    }
+
+    return el;
+  }
 
   return {
-    bindActions: bindActions
+    getEventElement: getEventElement
   };
 }();
 "use strict";
@@ -47,7 +58,7 @@ var AJAX = function () {
    * @param {Element|string} selector Either the element we wish to interact with, or a CSS selector string
    */
   var getElem = function getElem(selector) {
-    var el = False;
+    var el = false;
 
     if (typeof selector == 'string') {
       el = document.querySelector(selector);
@@ -138,6 +149,8 @@ var AJAX = function () {
 
 
   var returnHTML = function returnHTML(json_obj) {
+    var html = '';
+
     if (json_obj.is_valid && json_obj.hasOwnProperty('html')) {
       html = json_obj.html;
     } else if (!json_obj.is_valid && json_obj.hasOwnProperty('error')) {
@@ -173,12 +186,13 @@ var AJAX = function () {
 
   var checkDataset = function checkDataset(elem) {
     var check_target = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+    elem = getElem(elem);
     var dataset = elem.dataset;
 
     if (!dataset.url && !dataset.target) {
       console.error("This dataset is missing necessary parameters: ".concat(dataset));
     } else if (check_target && !dataset.target) {
-      dataset.target = ".".concat(el.className.replace(' ', '.'));
+      dataset.target = ".".concat(elem.className.split(' ').join('.'));
     }
 
     return dataset;
@@ -212,7 +226,7 @@ var AJAX = function () {
   var getLoad = function getLoad(url, selector) {
     var dataType = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'json';
     return checkAndParse(url, dataType, selector).then(function (json) {
-      html = returnHTML(json);
+      var html = returnHTML(json);
       loadSingleElement(html, selector);
     });
   };
@@ -249,49 +263,36 @@ var AJAX = function () {
     getLoadElements: getLoadElements
   };
 }();
-
-module.exports = [AJAX]; // YOU KNOW, IN CASE YOU WANT TO IMPORT THIS SOMEWHERE
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 /*
-A poorly named but common place to stick general purpose utility functions.
-*/
-var Utils = function () {
-  /**
-   * Return HTML element that triggered event
-   * @param ev - Click event
-   * @param tagName - TagName we should search for (string or array)
-   * @returns {*|HTMLElement}
-   */
-  function getEventElement(ev, tagName) {
-    var el = ev.target;
+   src/bind.js
+  
+  This defines global event listeners that serve to bind custom AJAX actions to document events.
+  ASSUMPTIONS - Anchor elements are the only general purpose triggers for these actions 
+  If the above is not true, modify code accordingly
 
-    if (typeof tagName == 'string') {
-      while (el.tagName !== tagName) {
-        el = el.parentElement;
+  CURRENTLY ONLY DEFINE ONE CSS CLASS BINDING BUT THIS CAN BE DRAMATICALLY EXPANDED 
+ */
+var Binder = function () {
+  var selectors = {
+    '.js-load-page': AJAX.getLoadElement
+  };
 
-        if (el === null) {
-          el = false;
-          break;
-        }
+  var bindActions = function bindActions() {
+    document.addEventListener('click', function (event) {
+      var elem = Utils.getEventElement(event, 'A'); // <- this is to deal with things like icons or p tags on top of Anchor elements
+
+      if (elem) {
+        var elClass = Object.keys(selectors).find(function (k) {
+          return elem.matches(k);
+        });
+        selectors[elClass](elem);
       }
-    } else if (_typeof(tagName) == 'object') {
-      while (!el.tagName.includes(tagName)) {
-        el = el.parentElement;
-
-        if (el === null) {
-          el = false;
-          break;
-        }
-      }
-    }
-
-    return el;
-  }
+    });
+  };
 
   return {
-    getEventElement: getEventElement
+    bindActions: bindActions
   };
 }();

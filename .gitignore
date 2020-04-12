@@ -115,3 +115,5 @@ web_modules/
 .pnp.*
 
 package-lock.json
+
+.vscode/

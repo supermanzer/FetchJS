@@ -8,7 +8,7 @@
   CURRENTLY ONLY DEFINE ONE CSS CLASS BINDING BUT THIS CAN BE DRAMATICALLY EXPANDED 
  */
 
- const Binder = (() => {
+ var Binder = function() {
     const selectors = {
         '.js-load-page': AJAX.getLoadElement,
     }
@@ -25,4 +25,4 @@
     return {
         bindActions: bindActions
     }
- })();
+ }();
