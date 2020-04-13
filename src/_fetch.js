@@ -79,6 +79,9 @@
                 case 403:
                     console.log("You're not allowed to do that") // <- ALSO A GOOD SPOT FOR NIFTY STUFF
                     break;
+                case 404:
+                    console.log("I can't find that....sorry")
+                    break;
                 default:
                     Promise.reject(new Error('Loading failed'));
              }

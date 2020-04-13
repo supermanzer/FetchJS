@@ -134,6 +134,10 @@ var AJAX = function () {
 
           break;
 
+        case 404:
+          console.log("I can't find that....sorry");
+          break;
+
         default:
           Promise.reject(new Error('Loading failed'));
       }

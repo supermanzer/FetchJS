@@ -11,4 +11,22 @@ I am sharing this code for multiple reasons but this was never intended to be so
  * To share with people who have the same need/use case
  * Possibly to get some tips on how to write better JavaScript
 
+## Trying it Out
+
+You can pull down the compiled files in the `dist/` directory (`main.js` unminified and `main.min.js` minified versions). The individual component files are in the `src/` directory.  Feel free to open up and re-write.  The intent of the JavaScript files here are that they will be modified to suit each individual's needs.  I included one class binding (`js-load-page`) as the most generic.  I have made liberal use of modals in my own work (`js-load-modal`) but each front end framework implements modals in their own fashion so that felt a bit more specialized.
+
+You might be wondering
+> Hey if this is a JavaScript repo what is that api.py file doing here?
+
+  1. Don't judge me, Python is awesome!
+  2. I wanted to provide a sample back-end to interact with
+
+The api.py spins up a simple [Flask](https://flask.palletsprojects.com/en/1.1.x/) API that the `index.html` will attempt to contact.  You will need to have python and pip installed for this to work (try `python --verison` and `pip --version`, if you get an output you're good to go).  You are going to want to follow the next few steps in a terminal.
+
+* Run `pip install -r requirements.txt` to install Flask and Flask_CORS (getting around CORS issues)
+* Run `python api.py` to start the Flask API
+* Start a local web server for `index.html` (as a Python fan I usually run `python - http.server` to spin up a simple server running at `localhost:8000`).
+
+I invite any and all curious and helpful comments/issues.  If I've written crappy JavaScript and you want to sahre some tips on how to do it better I'd appreciate the help.
+
  
